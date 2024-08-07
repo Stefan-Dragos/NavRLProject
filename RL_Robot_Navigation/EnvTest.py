@@ -7,6 +7,7 @@ from NavEnvironmentV4 import NavEnvV4_Custom
 from stable_baselines3 import PPO
 from stable_baselines3 import A2C
 from stable_baselines3 import SAC
+from stable_baselines3 import DDPG
 
 from stable_baselines3.common.evaluation import evaluate_policy
 #from stable_baselines3 import TD3
@@ -94,20 +95,20 @@ def main():
     #------------------HyperParameters-----------------------------------
     timeSteps = 500000
     learningRate = 0.0003
-    entC = 0
+    entC = 0.0001
     #--------------------------------------------------------------------
 
     env = VecMonitor(SubprocVecEnv([make_env(i) for i in range(num_envs)]), "logdirRl/monitor")
 
-    model = SAC("MlpPolicy", env, verbose=1, learning_rate=learningRate, ent_coef=entC, tensorboard_log="./VaryModels_board/")
+    model = DDPG("MlpPolicy", env, verbose=1, learning_rate=learningRate, tensorboard_log="./VaryModels_board/")
 
     print("--------Started Learning-----------")
 
     callback = SaveOnBestTrainingRewardCallback(check_freq=1000, log_dir=log_dir)
 
-    model.learn(total_timesteps=timeSteps, callback=callback, tb_log_name=f"SAC_LR{learningRate}_Steps{timeSteps}_ent{entC}_5H")
+    model.learn(total_timesteps=timeSteps, callback=callback, tb_log_name=f"DDPG_LR{learningRate}_Steps{timeSteps}_5H")  #_ent{entC}
 
-    model.save("SavedRLModels/SACent0_lr0.0003")
+    model.save("SavedRLModels/DDPG_lr0.0003")
 
     print("---------Finished Learning------------")
 
