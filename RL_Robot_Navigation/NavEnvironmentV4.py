@@ -204,20 +204,23 @@ class NavEnvV4(Env):
             #negative rew proportional to magnitude of angular velocity
             #angularAccRew = -1 * abs(self.angularVel / 10)
 
+        #evaluate reward for turning to face the target as you get closer to it
+        #angleRewV2 = -1 * abs(angleToTarget) / distanceToTarget
+
         #evaluate rewards, don't add target angle reward when reaching the target
         if self.hazardContact():
             terminated = False
-            reward = -25 + angleRew   #+ angularAccRew
+            reward = -25 + angleRew  #+ angularAccRew
             print("HAZARD CONTACT")
         elif distanceToTarget < self.TARGET_RADIUS:
             terminated = True
             reward = 10
             print("GOT TO TARGET")
         elif self.agent_position[0] > 590 or self.agent_position[0] < 10 or self.agent_position[1] > 595 or self.agent_position[1] < 5:
-            reward = -1 * distanceToTarget / 100 + angleRew   #+ angularAccRew
+            reward = -1 * distanceToTarget / 100 + angleRew #+ angularAccRew
         else:
             #negative reward proportional to distance to target
-            reward = -1 * distanceToTarget / 500 + angleRew   #+ angularAccRew
+            reward = -1 * distanceToTarget / 500 + angleRew  #+ angularAccRew
 
         #render new frame on each step                                                     
         self.render()
@@ -256,11 +259,11 @@ class NavEnvV4(Env):
 
         #reset hazard position with one random pos
         #self.hazard_positions = [[140,275,0],[320,175,0],[200,400,0],[375,265,0],[335, 465, 0]]
-        self.hazard_positions = [[rng.randint(10,590), rng.randint(110,490)]]
+        self.hazard_positions = [[rng.randint(10,590), rng.randint(130,490)]]
 
         #fill in the rest of hazard positions
         for i in range(self.hazardNum - 1):
-            self.hazard_positions.append([rng.randint(10,590), rng.randint(110,490)])
+            self.hazard_positions.append([rng.randint(10,590), rng.randint(130,490)])
         
         #update render positions
         if self.render_mode == "human":
@@ -394,6 +397,7 @@ class NavEnvV4(Env):
         self.CLOCK = pygame.time.Clock()
         #initalize the screen
         self.SCREEN = pygame.display.set_mode((600,600))
+        pygame.display.set_caption("Navigation Environment V4")
         #init all robot surfaces
         self.robotSurf = pygame.Surface((self.ROBOT_WIDTH,self.ROBOT_HEIGHT))
         self.robotSurf.fill((180,255,0))

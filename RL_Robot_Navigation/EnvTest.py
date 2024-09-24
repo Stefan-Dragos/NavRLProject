@@ -10,7 +10,7 @@ from stable_baselines3 import SAC
 from stable_baselines3 import DDPG
 
 from stable_baselines3.common.evaluation import evaluate_policy
-#from stable_baselines3 import TD3
+from stable_baselines3 import TD3
 #from stable_baselines3.common.noise import NormalActionNoise, OrnsteinUhlenbeckActionNoise
 from stable_baselines3.common.vec_env import SubprocVecEnv
 from stable_baselines3.common.results_plotter import load_results, ts2xy
@@ -94,21 +94,21 @@ def main():
 
     #------------------HyperParameters-----------------------------------
     timeSteps = 500000
-    learningRate = 0.0003
+    learningRate = 0.00003
     entC = 0.0001
     #--------------------------------------------------------------------
 
     env = VecMonitor(SubprocVecEnv([make_env(i) for i in range(num_envs)]), "logdirRl/monitor")
 
-    model = DDPG("MlpPolicy", env, verbose=1, learning_rate=learningRate, tensorboard_log="./VaryModels_board/")
+    model = PPO("MlpPolicy", env, verbose=1, learning_rate=learningRate, ent_coef=entC,tensorboard_log="./VaryModels_board/")
 
     print("--------Started Learning-----------")
 
     callback = SaveOnBestTrainingRewardCallback(check_freq=1000, log_dir=log_dir)
 
-    model.learn(total_timesteps=timeSteps, callback=callback, tb_log_name=f"DDPG_LR{learningRate}_Steps{timeSteps}_5H")  #_ent{entC}
+    model.learn(total_timesteps=timeSteps, callback=callback, tb_log_name=f"0.00003V4PPO")  #_ent{entC}
 
-    model.save("SavedRLModels/DDPG_lr0.0003")
+    model.save("SavedRLModels/V4PPOlr0.00003")
 
     print("---------Finished Learning------------")
 

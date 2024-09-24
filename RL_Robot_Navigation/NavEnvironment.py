@@ -57,8 +57,8 @@ class NavEnv(Env):
         self.POWER_VEL_MULTIPLIER = power_multiplier
         self.WHEEL_OFFSET = self.ROBOT_WIDTH / 16
 
-        self.TARGET_RADIUS = 50
-        self.HAZARD_RADIUS = 10
+        self.TARGET_RADIUS = 25
+        self.HAZARD_RADIUS = 20
 
 
         #Assigning environment render mode
@@ -129,18 +129,18 @@ class NavEnv(Env):
         self.currentSteps = 0
 
         #randomize agent and target position
-        self.agent_position = [150,75,0] #[random.randint(100,500), random.randint(50,100), 0]
-        self.target_position = [400, 565, 0]#[random.randint(50,550), random.randint(500,600), 0]
+        self.agent_position = [random.randint(100,500), random.randint(50,100), 0]
+        self.target_position = [random.randint(50,550), random.randint(500,600), 0]
         self.xPos = self.agent_position[0]
         self.yPos = self.agent_position[1]
         self.heading = self.agent_position[2]
 
         #reset hazard position with one random pos
-        self.hazard_positions = [[140,275,0],[320,175,0],[200,400,0],[375,265,0],[335, 465, 0]] #[[random.randint(10,590), random.randint(110,490), 0]]
+        self.hazard_positions = [[random.randint(10,590), random.randint(110,490), 0]]
 
         #fill in the rest of hazard positions
-        #for i in range(self.hazardNum - 1):
-            #self.hazard_positions.append([random.randint(10,590), random.randint(110,490), 0])
+        for i in range(self.hazardNum - 1):
+            self.hazard_positions.append([random.randint(10,590), random.randint(110,490), 0])
         
         #update render positions
         if self.render_mode == "human":
